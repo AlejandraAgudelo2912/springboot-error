@@ -2,6 +2,7 @@ package com.alejandra.curso.springboot.error.springboot_error.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alejandra.curso.springboot.error.springboot_error.exceptions.UserNotFoundException;
 import com.alejandra.curso.springboot.error.springboot_error.models.domain.User;
 import com.alejandra.curso.springboot.error.springboot_error.services.UserService;
 
@@ -30,6 +31,9 @@ public class AppController {
     @GetMapping("/show/{id}")
     public User show(@PathVariable(name = "id") Long id) {
         User user = service.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException("Error el usuario no existe");
+        }
         System.out.println(user.getLastName());
         return user;
     }
