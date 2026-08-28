@@ -6,7 +6,10 @@ import com.alejandra.curso.springboot.error.springboot_error.exceptions.UserNotF
 import com.alejandra.curso.springboot.error.springboot_error.models.domain.User;
 import com.alejandra.curso.springboot.error.springboot_error.services.UserService;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +32,16 @@ public class AppController {
     }
 
     @GetMapping("/show/{id}")
+    //public ResponseEntity<?> show(@PathVariable(name = "id") Long id) {
     public User show(@PathVariable(name = "id") Long id) {
-        User user = service.findById(id);
-        if (user == null) {
-            throw new UserNotFoundException("Error el usuario no existe");
-        }
-        System.out.println(user.getLastName());
+        User user = service.findById(id).orElseThrow(
+            ()-> new UserNotFoundException("Error el usuario no existe"));
+        // Optional<User> optionalUser = service.findById(id);
+        // if (optionalUser.isEmpty()) {
+        //     return ResponseEntity.notFound().build();
+        // }
+        // System.out.println(user.getLastName());
+        //return ResponseEntity.ok(optionalUser.orElseThrow());
         return user;
     }
     
